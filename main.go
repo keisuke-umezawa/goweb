@@ -1,8 +1,10 @@
 package main
 
 import (
+    "encoding/json"
 	"fmt"
 	"net/http"
+
 	"github.com/gorilla/mux"
 )
 
@@ -32,7 +34,11 @@ func Index(w http.ResponseWriter, r *http.Request) {
 }
 
 func UserIndex(w http.ResponseWriter, r *http.Request) {
-	w.Write([]byte("UserIndex!\n"))
+    users := Users{
+        User{Id: "00000001", Name: "keisuke"},
+        User{Id: "00000002", Name: "yusuke"},
+    }
+    json.NewEncoder(w).Encode(users)
 }
 
 func UserIndexId(w http.ResponseWriter, r *http.Request) {
