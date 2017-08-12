@@ -1,34 +1,38 @@
 package main
 
-import "fmt"
+import (
+    "fmt"
 
-var currentId int
+    "github.com/keisuke-umezawa/goweb/model"
+)
 
-var users Users
+var currentId uint
+
+var users model.Users
 
 func init() {
-    RepoCreateUser(User{Name: "keisuke"})
-    RepoCreateUser(User{Name: "yusuke"})
+    RepoCreateUser(model.User{Name: "keisuke"})
+    RepoCreateUser(model.User{Name: "yusuke"})
 }
 
-func RepoFindUser(id int) User {
+func RepoFindUser(id uint) model.User {
     for _, u := range users {
         if u.Id == id {
             return u
         }
     }
-    return User{}
+    return model.User{}
 }
 
 // this is bad, I don't think it passes race conditions
-func RepoCreateUser(u User) User {
+func RepoCreateUser(u model.User) model.User {
     currentId += 1
     u.Id = currentId
     users = append(users, u)
     return u
 }
 
-func RepoDeleteUser(id int) error {
+func RepoDeleteUser(id uint) error {
     for i, u := range users {
         if u.Id == id {
             users = append(users[:i], users[i+1:]...)

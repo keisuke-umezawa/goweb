@@ -9,6 +9,7 @@ import (
     "strconv"
 
 	"github.com/gorilla/mux"
+    "github.com/keisuke-umezawa/goweb/model"
 )
 
 func Index(w http.ResponseWriter, r *http.Request) {
@@ -25,12 +26,12 @@ func UserIndex(w http.ResponseWriter, r *http.Request) {
 
 func UserShow(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
-    todoId, err := strconv.Atoi(vars["userId"]);
+    userId, err := strconv.Atoi(vars["userId"]);
     if err != nil {
         panic(err)
     }
-    user := RepoFindUser(todoId)
-    if user.Id > 0 {
+    user := RepoFindUser(uint(userId)
+    if user.Id > uint(0) {
         w.Header().Set("Content-Type", "application/json; charset=UTF-8")
         w.WriteHeader(http.StatusOK)
         if err := json.NewEncoder(w).Encode(user); err != nil {
@@ -59,7 +60,7 @@ func UserCreate(w http.ResponseWriter, r *http.Request) {
     if err := r.Body.Close(); err != nil {
         panic(err)
     }
-    var user User
+    var user model.User
     if err := json.Unmarshal(body, &user); err != nil {
         w.Header().Set("Content-Type", "application/json; charset=UTF-8")
         w.WriteHeader(422) // unprocessable entity
