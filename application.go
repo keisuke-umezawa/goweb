@@ -7,6 +7,6 @@ import (
 )
 
 type Application struct {
-    db db.Datastore
+    db *db.DB
     logger *log.Logger
 }
