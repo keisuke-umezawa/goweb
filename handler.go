@@ -2,18 +2,18 @@ package main
 
 import (
     "encoding/json"
-	"io"
-	"io/ioutil"
-	"fmt"
-	"net/http"
+    "io"
+    "io/ioutil"
+    "fmt"
+    "net/http"
     "strconv"
 
-	"github.com/gorilla/mux"
+    "github.com/gorilla/mux"
     "github.com/keisuke-umezawa/goweb/model"
 )
 
 func (app *Application) Index(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(w, "Welcome!\n")
+    fmt.Fprintf(w, "Welcome!\n")
 }
 
 func (app *Application) UserIndex(w http.ResponseWriter, r *http.Request) {
@@ -27,7 +27,7 @@ func (app *Application) UserIndex(w http.ResponseWriter, r *http.Request) {
 }
 
 func (app *Application) UserShow(w http.ResponseWriter, r *http.Request) {
-	vars := mux.Vars(r)
+    vars := mux.Vars(r)
     userId, err := strconv.Atoi(vars["userId"]);
     if err != nil {
         panic(err)
@@ -77,5 +77,5 @@ func (app *Application) UserCreate(w http.ResponseWriter, r *http.Request) {
 }
 
 func NotFoundHandler(w http.ResponseWriter, r *http.Request) {
-	w.Write([]byte("Gorilla!\nNot Found 404\n"))
+    w.Write([]byte("Gorilla!\nNot Found 404\n"))
 }
