@@ -27,3 +27,4 @@ _testmain.go
 # vscode
 debug
 launch.json
+*.db
