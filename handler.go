@@ -12,11 +12,11 @@ import (
     "github.com/keisuke-umezawa/goweb/model"
 )
 
-func Index(w http.ResponseWriter, r *http.Request) {
+func (app *Application) Index(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, "Welcome!\n")
 }
 
-func UserIndex(w http.ResponseWriter, r *http.Request) {
+func (app *Application) UserIndex(w http.ResponseWriter, r *http.Request) {
     w.Header().Set("Content-Type", "application/json; charset=UTF-8")
     w.WriteHeader(http.StatusOK)
     if err := json.NewEncoder(w).Encode(users); err != nil {
@@ -24,13 +24,13 @@ func UserIndex(w http.ResponseWriter, r *http.Request) {
     }
 }
 
-func UserShow(w http.ResponseWriter, r *http.Request) {
+func (app *Application) UserShow(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
     userId, err := strconv.Atoi(vars["userId"]);
     if err != nil {
         panic(err)
     }
-    user := RepoFindUser(uint(userId)
+    user := RepoFindUser(uint(userId))
     if user.Id > uint(0) {
         w.Header().Set("Content-Type", "application/json; charset=UTF-8")
         w.WriteHeader(http.StatusOK)
@@ -48,11 +48,7 @@ func UserShow(w http.ResponseWriter, r *http.Request) {
     }
 }
 
-func NotFoundHandler(w http.ResponseWriter, r *http.Request) {
-	w.Write([]byte("Gorilla!\nNot Found 404\n"))
-}
-
-func UserCreate(w http.ResponseWriter, r *http.Request) {
+func (app *Application) UserCreate(w http.ResponseWriter, r *http.Request) {
     body, err := ioutil.ReadAll(io.LimitReader(r.Body, 1048576))
     if err != nil {
         panic(err)
@@ -75,4 +71,8 @@ func UserCreate(w http.ResponseWriter, r *http.Request) {
     if err := json.NewEncoder(w).Encode(u); err != nil {
         panic(err)
     }
+}
+
+func NotFoundHandler(w http.ResponseWriter, r *http.Request) {
+	w.Write([]byte("Gorilla!\nNot Found 404\n"))
 }
