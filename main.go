@@ -24,48 +24,13 @@ func main() {
     app := &Application{db: db}
 
     routes := route.Routes{
-        route.Route{
-            "Index",
-            "GET",
-            "/",
-            app.Index,
-        },
-        route.Route{
-            "UserIndex",
-            "GET",
-            "/users",
-            app.UserIndex,
-        },
-        route.Route{
-            "UserShow",
-            "GET",
-            "/users/{id}",
-            app.UserShow,
-        },
-        route.Route{
-            "UserCreate",
-            "POST",
-            "/users",
-            app.UserCreate,
-        },
-        route.Route{
-            "GroupIndex",
-            "GET",
-            "/groups",
-            app.GroupIndex,
-        },
-        route.Route{
-            "GroupShow",
-            "GET",
-            "/groups/{id}",
-            app.GroupShow,
-        },
-        route.Route{
-            "GroupCreate",
-            "POST",
-            "/groups",
-            app.GroupCreate,
-        },
+        route.Route{ "Index", "GET", "/", app.Index, },
+        route.Route{ "UserIndex", "GET", "/users", app.UserIndex, },
+        route.Route{ "UserShow", "GET", "/users/{id}", app.UserShow, },
+        route.Route{ "UserCreate", "POST", "/users", app.UserCreate, },
+        route.Route{ "GroupIndex", "GET", "/groups", app.GroupIndex, },
+        route.Route{ "GroupShow", "GET", "/groups/{id}", app.GroupShow, },
+        route.Route{ "GroupCreate", "POST", "/groups", app.GroupCreate, },
     }
 
     router := route.NewRouter(routes)
