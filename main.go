@@ -4,11 +4,8 @@ import (
     "log"
 	"net/http"
 
-    "github.com/jinzhu/gorm"
     "github.com/keisuke-umezawa/goweb/db"
 )
-
-var database *gorm.DB
 
 func main() {
     db, err := db.NewSqliteDB("db/database.db")

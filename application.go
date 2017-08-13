@@ -1,11 +1,12 @@
 package main
 
 import (
-    "database/sql"
     "log"
+
+    "github.com/keisuke-umezawa/goweb/db"
 )
 
 type Application struct {
-    db *sql.DB
+    db db.Datastore
     logger *log.Logger
 }
