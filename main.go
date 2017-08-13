@@ -6,6 +6,7 @@ import (
 
     "github.com/keisuke-umezawa/goweb/db"
     "github.com/keisuke-umezawa/goweb/route"
+    "github.com/keisuke-umezawa/goweb/model"
 )
 
 func main() {
@@ -13,6 +14,13 @@ func main() {
     if err != nil {
         log.Panic(err)
     }
+    defer db.Close()
+
+    // register model
+    db.AutoMigrate(&model.User{})
+    db.AutoMigrate(&model.Group{})
+    db.AutoMigrate(&model.Message{})
+
     app := &Application{db: db}
 
     routes := route.Routes{
@@ -31,14 +39,32 @@ func main() {
         route.Route{
             "UserShow",
             "GET",
-            "/users/{userId}",
+            "/users/{id}",
             app.UserShow,
         },
         route.Route{
-            "UserCrate",
+            "UserCreate",
             "POST",
             "/users",
             app.UserCreate,
+        },
+        route.Route{
+            "GroupIndex",
+            "GET",
+            "/groups",
+            app.GroupIndex,
+        },
+        route.Route{
+            "GroupShow",
+            "GET",
+            "/groups/{id}",
+            app.GroupShow,
+        },
+        route.Route{
+            "GroupCreate",
+            "POST",
+            "/groups",
+            app.GroupCreate,
         },
     }
 

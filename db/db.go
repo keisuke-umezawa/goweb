@@ -1,11 +1,9 @@
 package db
 
 import (
-    "os"
-
     "github.com/jinzhu/gorm"
-    _ "github.com/mattn/go-sqlite3"
-    "github.com/keisuke-umezawa/goweb/model"
+    _ "github.com/jinzhu/gorm/dialects/sqlite"
+    _ "github.com/jinzhu/gorm/dialects/postgres"
 )
 
 type DB struct {
@@ -17,15 +15,13 @@ func NewSqliteDB(path string) (*DB, error) {
     if err != nil {
         return nil, err
     }
-    if os.Getenv("AUTOMIGATE") == "1" {
-        db.AutoMigrate(
-            &model.User{},
-        )
+    return &DB{db}, nil
+}
+
+func NewPostgreDB(path string) (*DB, error) {
+    db, err := gorm.Open("postgres", path)
+    if err != nil {
+        return nil, err
     }
-    if !db.HasTable(&model.User{}) {
-        db.CreateTable(&model.User{})
-    }
-    // db.Create(&model.User{Name: "keisuke"})
-    // db.Create(&model.User{Name: "yusuke"})
     return &DB{db}, nil
 }

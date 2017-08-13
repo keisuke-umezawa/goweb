@@ -1,7 +1,11 @@
 package model
 
+import (
+    "github.com/jinzhu/gorm"
+)
+
 type User struct {
-    Id      uint        `gorm:"primary_key;Auto_INCREMENT" json:"id" form:"id"`
+    gorm.Model
     Name    string      `json:"name" form:"name"`
 }
 
