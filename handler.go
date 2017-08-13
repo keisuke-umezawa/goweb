@@ -19,6 +19,8 @@ func (app *Application) Index(w http.ResponseWriter, r *http.Request) {
 func (app *Application) UserIndex(w http.ResponseWriter, r *http.Request) {
     w.Header().Set("Content-Type", "application/json; charset=UTF-8")
     w.WriteHeader(http.StatusOK)
+    users := model.Users{}
+    app.db.Debug().Find(&users)
     if err := json.NewEncoder(w).Encode(users); err != nil {
         panic(err)
     }
@@ -30,7 +32,8 @@ func (app *Application) UserShow(w http.ResponseWriter, r *http.Request) {
     if err != nil {
         panic(err)
     }
-    user := RepoFindUser(uint(userId))
+    var user model.User
+    app.db.Debug().First(&user, userId)
     if user.Id > uint(0) {
         w.Header().Set("Content-Type", "application/json; charset=UTF-8")
         w.WriteHeader(http.StatusOK)
@@ -65,10 +68,10 @@ func (app *Application) UserCreate(w http.ResponseWriter, r *http.Request) {
         }
     }
 
-    u := RepoCreateUser(user)
+    app.db.Debug().Create(&user)
     w.Header().Set("Content-Type", "application/json; charset=UTF-8")
     w.WriteHeader(http.StatusCreated)
-    if err := json.NewEncoder(w).Encode(u); err != nil {
+    if err := json.NewEncoder(w).Encode(user); err != nil {
         panic(err)
     }
 }
