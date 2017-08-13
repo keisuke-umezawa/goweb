@@ -5,6 +5,7 @@ import (
     "net/http"
 
     "github.com/keisuke-umezawa/goweb/db"
+    "github.com/keisuke-umezawa/goweb/route"
 )
 
 func main() {
@@ -14,26 +15,26 @@ func main() {
     }
     app := &Application{db: db}
 
-    routes := Routes{
-        Route{
+    routes := route.Routes{
+        route.Route{
             "Index",
             "GET",
             "/",
             app.Index,
         },
-        Route{
+        route.Route{
             "UserIndex",
             "GET",
             "/users",
             app.UserIndex,
         },
-        Route{
+        route.Route{
             "UserShow",
             "GET",
             "/users/{userId}",
             app.UserShow,
         },
-        Route{
+        route.Route{
             "UserCrate",
             "POST",
             "/users",
@@ -41,7 +42,7 @@ func main() {
         },
     }
 
-    router := NewRouter(routes)
+    router := route.NewRouter(routes)
 
     // http://localhost:8080 でサービスを行う
     log.Fatal(http.ListenAndServe(":8080", router))

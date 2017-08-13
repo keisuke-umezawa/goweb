@@ -1,4 +1,4 @@
-package main
+package route
 
 import (
     "net/http"
@@ -23,4 +23,8 @@ func NewRouter(routes Routes) *mux.Router {
 
     router.NotFoundHandler = http.HandlerFunc(NotFoundHandler)
     return router
+}
+
+func NotFoundHandler(w http.ResponseWriter, r *http.Request) {
+    w.Write([]byte("Gorilla!\nNot Found 404\n"))
 }

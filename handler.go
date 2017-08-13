@@ -76,6 +76,3 @@ func (app *Application) UserCreate(w http.ResponseWriter, r *http.Request) {
     }
 }
 
-func NotFoundHandler(w http.ResponseWriter, r *http.Request) {
-    w.Write([]byte("Gorilla!\nNot Found 404\n"))
-}
