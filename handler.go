@@ -166,10 +166,9 @@ func (app *Application) MessagePost(w http.ResponseWriter, r *http.Request) {
 
     text := message.Text
     response := model.Message{
-        SenderID: 1,
+        UserID: 1,
         GroupID: message.GroupID,
         Text: text + "!!!", Mode: "dialogue"}
-
 
     w.Header().Set("Content-Type", "application/json; charset=UTF-8")
     w.WriteHeader(http.StatusCreated)
