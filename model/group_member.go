@@ -1,11 +1,7 @@
 package model
 
-import (
-    "github.com/jinzhu/gorm"
-)
-
 type GroupMember struct {
-    gorm.Model
+    ID          uint        `json:"id" form:"id"`
     User        User
     UserID      uint
     Group       Group

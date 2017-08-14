@@ -1,15 +1,9 @@
 package model
 
-import (
-    "github.com/jinzhu/gorm"
-)
-
 type Message struct {
-    gorm.Model
-    Sender      User        `gorm:"ForeignKey:SenderID"`
-    SenderID    uint
-    Group       Group
-    GroupID     uint
+    ID          uint        `json:"id" form:"id"`
+    SenderID    uint        `json:"sender_id" form:"sender_id"`
+    GroupID     uint        `json:"group_id" form:"group_id"`
     Text        string      `json:"text" form:"text"`
     Mode        string      `json:"mode" form:"mode"`
 }
