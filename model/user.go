@@ -1,8 +1,10 @@
 package model
 
+import _ "github.com/jinzhu/gorm"
+
 type User struct {
     ID      uint        `gorm:"primary_key" json:"id" form:"id"`
-    Name    string      `gorm:"primary_key" json:"name" form:"name"`
+    Name    string      `gorm:"unique" json:"name" form:"name"`
 }
 
 type Users []User

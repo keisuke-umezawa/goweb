@@ -4,16 +4,27 @@ import (
     "encoding/json"
     "io"
     "io/ioutil"
-    "fmt"
     "net/http"
     "strconv"
+    "os/exec"
 
     "github.com/gorilla/mux"
     "github.com/keisuke-umezawa/goweb/model"
 )
 
 func (app *Application) Index(w http.ResponseWriter, r *http.Request) {
-    fmt.Fprintf(w, "Welcome!\n")
+    if out, err := exec.Command("./script/hello").Output(); err != nil {
+        w.Header().Set("Content-Type", "text; charset=UTF-8")
+        w.WriteHeader(500) // unprocessable entity
+        if err := json.NewEncoder(w).Encode(err); err != nil {
+            panic(err)
+        }
+        return
+    } else {
+        if err := json.NewEncoder(w).Encode(string(out)); err != nil {
+            panic(err)
+        }
+    }
 }
 
 func (app *Application) UserIndex(w http.ResponseWriter, r *http.Request) {
@@ -59,6 +70,8 @@ func (app *Application) UserCreate(w http.ResponseWriter, r *http.Request) {
     if err := r.Body.Close(); err != nil {
         panic(err)
     }
+
+    // json -> User
     var user model.User
     if err := json.Unmarshal(body, &user); err != nil {
         w.Header().Set("Content-Type", "application/json; charset=UTF-8")
@@ -66,9 +79,20 @@ func (app *Application) UserCreate(w http.ResponseWriter, r *http.Request) {
         if err := json.NewEncoder(w).Encode(err); err != nil {
             panic(err)
         }
+        return
     }
 
-    app.db.Debug().Create(&user)
+    // register into DB
+    if err := app.db.Debug().Create(&user); err != nil {
+        w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+        w.WriteHeader(422) // unprocessable entity
+        if err := json.NewEncoder(w).Encode(err); err != nil {
+            panic(err)
+        }
+        return
+    }
+
+    // make response
     w.Header().Set("Content-Type", "application/json; charset=UTF-8")
     w.WriteHeader(http.StatusCreated)
     if err := json.NewEncoder(w).Encode(user); err != nil {
@@ -119,6 +143,8 @@ func (app *Application) GroupCreate(w http.ResponseWriter, r *http.Request) {
     if err := r.Body.Close(); err != nil {
         panic(err)
     }
+
+    // json -> Group
     var group model.Group
     if err := json.Unmarshal(body, &group); err != nil {
         w.Header().Set("Content-Type", "application/json; charset=UTF-8")
@@ -126,9 +152,20 @@ func (app *Application) GroupCreate(w http.ResponseWriter, r *http.Request) {
         if err := json.NewEncoder(w).Encode(err); err != nil {
             panic(err)
         }
+        return
     }
 
-    app.db.Debug().Create(&group)
+    // register into DB
+    if err := app.db.Debug().Create(&group); err != nil {
+        w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+        w.WriteHeader(422) // unprocessable entity
+        if err := json.NewEncoder(w).Encode(err); err != nil {
+            panic(err)
+        }
+        return
+    }
+
+    // make response
     w.Header().Set("Content-Type", "application/json; charset=UTF-8")
     w.WriteHeader(http.StatusCreated)
     if err := json.NewEncoder(w).Encode(group); err != nil {
@@ -154,6 +191,8 @@ func (app *Application) MessagePost(w http.ResponseWriter, r *http.Request) {
     if err := r.Body.Close(); err != nil {
         panic(err)
     }
+
+    // json -> Message
     var message model.Message
     if err := json.Unmarshal(body, &message); err != nil {
         w.Header().Set("Content-Type", "application/json; charset=UTF-8")
@@ -161,14 +200,23 @@ func (app *Application) MessagePost(w http.ResponseWriter, r *http.Request) {
         if err := json.NewEncoder(w).Encode(err); err != nil {
             panic(err)
         }
+        return
     }
-    app.db.Debug().Create(&message)
+    // register into DB
+        if err := app.db.Debug().Create(&message); err != nil {
+        w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+        w.WriteHeader(422) // unprocessable entity
+        if err := json.NewEncoder(w).Encode(err); err != nil {
+            panic(err)
+        }
+        return
+    }
 
-    text := message.Text
+    // make response
     response := model.Message{
         UserID: 1,
         GroupID: message.GroupID,
-        Text: text + "!!!", Mode: "dialogue"}
+        Text: message.Text + "!!!", Mode: "dialogue"}
 
     w.Header().Set("Content-Type", "application/json; charset=UTF-8")
     w.WriteHeader(http.StatusCreated)
