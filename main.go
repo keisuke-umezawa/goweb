@@ -31,6 +31,8 @@ func main() {
         route.Route{ "GroupIndex", "GET", "/groups", app.GroupIndex, },
         route.Route{ "GroupShow", "GET", "/groups/{id}", app.GroupShow, },
         route.Route{ "GroupCreate", "POST", "/groups", app.GroupCreate, },
+        route.Route{ "MessageIndex", "GET", "/messages", app.MessageIndex, },
+        route.Route{ "MessagePost", "POST", "/messages", app.MessagePost, },
     }
 
     router := route.NewRouter(routes)

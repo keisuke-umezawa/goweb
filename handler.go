@@ -135,3 +135,56 @@ func (app *Application) GroupCreate(w http.ResponseWriter, r *http.Request) {
         panic(err)
     }
 }
+
+func (app *Application) MessageIndex(w http.ResponseWriter, r *http.Request) {
+    w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+    w.WriteHeader(http.StatusOK)
+    messages := model.Messages{}
+    app.db.Debug().Find(&messages)
+    if err := json.NewEncoder(w).Encode(messages); err != nil {
+        panic(err)
+    }
+}
+
+func (app *Application) MessagePost(w http.ResponseWriter, r *http.Request) {
+    body, err := ioutil.ReadAll(io.LimitReader(r.Body, 1048576))
+    if err != nil {
+        panic(err)
+    }
+    if err := r.Body.Close(); err != nil {
+        panic(err)
+    }
+    var message model.Message
+    if err := json.Unmarshal(body, &message); err != nil {
+        w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+        w.WriteHeader(422) // unprocessable entity
+        if err := json.NewEncoder(w).Encode(err); err != nil {
+            panic(err)
+        }
+    }
+    var sender model.User
+    app.db.Debug().First(&sender, message.SenderID)
+    message.Sender = sender
+
+    var group model.Group
+    app.db.Debug().First(&group, message.GroupID)
+    message.Group = group
+
+    app.db.Debug().Create(&message)
+
+    var bot model.User
+    app.db.Debug().First(&bot, 1)
+    text := message.Text
+    response := model.Message{
+        Sender: bot, SenderID: bot.ID,
+        Group: group, GroupID: group.ID,
+        Text: text + "!!!", Mode: "dialogue"}
+
+
+    w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+    w.WriteHeader(http.StatusCreated)
+    if err := json.NewEncoder(w).Encode(response); err != nil {
+        panic(err)
+    }
+    app.db.Debug().Create(&response)
+}
