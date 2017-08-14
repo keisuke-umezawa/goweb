@@ -21,6 +21,6 @@ curl -H "Content-Type: application/json" -d '{"name":"tennis_club"}' http://loca
 
 - hostname/messages
 ```
-curl -H "Content-Type: application/json" -d '{"UserId":2, "GroupId":1, "text":"hhhhhhhhhh", "mode":"dialogue"}' http://localhost:8080/messages
+curl -H "Content-Type: application/json" -d '{"user_id":2, "group_id":1, "text":"hhhhhhhhhh", "mode":"dialogue"}' http://localhost:8080/messages
 ```
 
