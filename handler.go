@@ -162,22 +162,12 @@ func (app *Application) MessagePost(w http.ResponseWriter, r *http.Request) {
             panic(err)
         }
     }
-    var sender model.User
-    app.db.Debug().First(&sender, message.SenderID)
-    message.Sender = sender
-
-    var group model.Group
-    app.db.Debug().First(&group, message.GroupID)
-    message.Group = group
-
     app.db.Debug().Create(&message)
 
-    var bot model.User
-    app.db.Debug().First(&bot, 1)
     text := message.Text
     response := model.Message{
-        Sender: bot, SenderID: bot.ID,
-        Group: group, GroupID: group.ID,
+        SenderID: 1,
+        GroupID: message.GroupID,
         Text: text + "!!!", Mode: "dialogue"}
 
 
